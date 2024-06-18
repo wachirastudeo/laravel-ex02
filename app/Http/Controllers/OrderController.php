@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\Order_detail;
+use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
@@ -30,6 +33,28 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         //
+        $prepareCart = [
+
+            'price' => 0,
+            'status' => 0,
+            'user_id' => Auth::id()
+        ];
+
+        $order = Order::create($prepareCart);
+        $product = Product::find($request->product_id);
+        $prepareCartDetail = [
+
+            'order_id' => $order->id,
+            'product_id' => $product->id,
+            'product_name' => $product->name,
+            'amount' => 1,
+            'price' => $product->price,
+
+            'user_id' => Auth::id()
+        ];
+
+        $orderDetail  = Order_detail::create($prepareCartDetail);
+        return redirect()->route('products.index');
     }
 
     /**
