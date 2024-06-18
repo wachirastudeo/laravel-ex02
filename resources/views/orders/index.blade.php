@@ -17,9 +17,9 @@
                     <tbody>
                         @foreach ($order->order_details as $item)
                             <tr>
-                                <td>{{ $item->id }}</td>
-                                <td>400</td>
-                                <td>1</td>
+                                <td>{{ $item->product_name }}</td>
+                                <td>{{ $item->price }}</td>
+                                <td>{{ $item->amount }}</td>
                             </tr>
                         @endforeach
 

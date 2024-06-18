@@ -34,27 +34,50 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        $prepareCart = [
-
-
-            'status' => 0,
-            'user_id' => Auth::id()
-        ];
-
-        $order = Order::create($prepareCart);
         $product = Product::find($request->product_id);
-        $prepareCartDetail = [
+        $order = Order::where('user_id', Auth::id())->where('status', 0)->first();
+        if ($order) {
+            $orderDetail =  $order->order_details()->where('product_id', $product->id)->first();
+            if ($orderDetail) {
+                $amountNew = $orderDetail->amount + 1;
+                $orderDetail->update([
+                    'amount' => $amountNew
+                ]);
+            } else {
+                $prepareCartDetail = [
 
-            'order_id' => $order->id,
-            'product_id' => $product->id,
-            'product_name' => $product->name,
-            'amount' => 1,
-            'price' => $product->price,
+                    'order_id' => $order->id,
+                    'product_id' => $product->id,
+                    'product_name' => $product->name,
+                    'amount' => 1,
+                    'price' => $product->price,
 
-        ];
+                ];
 
-        $orderDetail  = Order_detail::create($prepareCartDetail);
+                $orderDetails  = Order_detail::create($prepareCartDetail);
+            }
+        } else {
+            $prepareCart = [
+                'status' => 0,
+                'user_id' => Auth::id()
+            ];
+
+            $order = Order::create($prepareCart);
+            $prepareCartDetail = [
+
+                'order_id' => $order->id,
+                'product_id' => $product->id,
+                'product_name' => $product->name,
+                'amount' => 1,
+                'price' => $product->price,
+
+            ];
+
+            $orderDetails  = Order_detail::create($prepareCartDetail);
+        }
+
+        //
+
         return redirect()->route('products.index');
     }
 
