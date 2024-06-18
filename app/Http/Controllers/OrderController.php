@@ -16,7 +16,9 @@ class OrderController extends Controller
     public function index()
     {
         //
-        return view('orders.index');
+        $order = Order::where('user_id', Auth::id())->where('status', 0)->first();
+
+        return view('orders.index')->with('order', $order);
     }
 
     /**
@@ -35,7 +37,7 @@ class OrderController extends Controller
         //
         $prepareCart = [
 
-            'price' => 0,
+
             'status' => 0,
             'user_id' => Auth::id()
         ];
@@ -50,7 +52,6 @@ class OrderController extends Controller
             'amount' => 1,
             'price' => $product->price,
 
-            'user_id' => Auth::id()
         ];
 
         $orderDetail  = Order_detail::create($prepareCartDetail);

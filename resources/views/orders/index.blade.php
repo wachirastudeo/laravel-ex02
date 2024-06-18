@@ -15,11 +15,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>p1</td>
-                            <td>400</td>
-                            <td>1</td>
-                        </tr>
+                        @foreach ($order->order_details as $item)
+                            <tr>
+                                <td>{{ $item->id }}</td>
+                                <td>400</td>
+                                <td>1</td>
+                            </tr>
+                        @endforeach
+
                     </tbody>
                 </table>
             </div>
