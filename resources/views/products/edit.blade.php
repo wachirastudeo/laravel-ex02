@@ -14,6 +14,7 @@
                     <label for="price"> price</label>
                     <input class="form-control" type="number" name="price" value="{{ $product->price }}">
                     <input type="submit" value="แก้ไข" class="btn btn-primary my-3">
+
                 </form>
             </div>
         </div>
