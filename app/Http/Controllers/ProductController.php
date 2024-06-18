@@ -39,7 +39,7 @@ class ProductController extends Controller
             'price' => $request->price,
             'user_id' => Auth::id(),
         ];
-        $product = Product::create($prepareProduct);
+        Product::create($prepareProduct);
 
         return redirect()->route('products.index');
     }
@@ -67,7 +67,15 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         //
+        $prepareProduct = [
+            'name' => $request->name,
+            'price' => $request->price,
+            'user_id' => Auth::id(),
+        ];
+        $productInst = Product::find($product->id);
+        $productInst->update($prepareProduct);
 
+        return redirect()->route('products.index');
     }
 
     /**
