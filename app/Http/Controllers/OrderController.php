@@ -107,6 +107,8 @@ class OrderController extends Controller
     public function edit(Order $order)
     {
         //
+
+
     }
 
     /**
@@ -115,6 +117,46 @@ class OrderController extends Controller
     public function update(Request $request, Order $order)
     {
         //
+
+        $orderDetail =  $order->order_details()->where('product_id', $request->product_id)->first();
+
+        if ($request->value == 'checkout') {
+            $order->update([
+                'status' => 1,
+            ]);
+        } else {
+
+            if ($orderDetail) {
+
+
+                if ($request->value == 'increase') {
+                    $amountNew = $orderDetail->amount + 1;
+
+                    $orderDetail->update([
+                        'amount' => $amountNew
+                    ]);
+                } else if ($request->value == 'decrease') {
+                    if ($orderDetail->amount == 1) {
+
+                        Order_detail::where('product_id', $request->product_id)->delete();
+                    } else {
+
+
+                        $amountNew = $orderDetail->amount - 1;
+                        $orderDetail->update([
+                            'amount' => $amountNew
+                        ]);
+                    }
+                }
+                $totalPrice = Order_detail::where('order_id', $order->id)
+                    ->selectRaw('SUM(price * amount) as total')
+                    ->value('total');
+                $order->update([
+                    'total' => $totalPrice
+                ]);
+            }
+        }
+        return redirect()->route('orders.index');
     }
 
     /**
