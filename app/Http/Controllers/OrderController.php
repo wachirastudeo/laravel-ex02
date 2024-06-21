@@ -36,6 +36,7 @@ class OrderController extends Controller
     {
         $product = Product::find($request->product_id);
         $order = Order::where('user_id', Auth::id())->where('status', 0)->first();
+
         if ($order) {
             $orderDetail =  $order->order_details()->where('product_id', $product->id)->first();
             if ($orderDetail) {
@@ -75,6 +76,17 @@ class OrderController extends Controller
 
             $orderDetails  = Order_detail::create($prepareCartDetail);
         }
+
+
+        $totalPrice = Order_detail::where('order_id', $order->id)
+            ->selectRaw('SUM(price * amount) as total')
+            ->value('total');
+
+
+        $order->update([
+            'total' => $totalPrice
+        ]);
+
 
         //
 

@@ -22,8 +22,14 @@
                                 <td>{{ $item->amount }}</td>
                             </tr>
                         @endforeach
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td>{{ $order->total }}</td>
 
+                        </tr>
                     </tbody>
+
                 </table>
             </div>
         </div>
